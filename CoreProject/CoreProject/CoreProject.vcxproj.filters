@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\abstract">
+      <UniqueIdentifier>{a058d8e9-8a2b-4d7b-832c-827731bc8b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\abstract">
+      <UniqueIdentifier>{2e1640ae-fb0c-4de0-aa2d-876b758473f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -33,6 +39,15 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="abstract_rule.h">
+      <Filter>Header Files\abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="line_rule.h">
+      <Filter>Header Files\abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="rules_engine.h">
+      <Filter>Header Files\abstract</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreProject.cpp">
@@ -43,6 +58,12 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="line_rule.cpp">
+      <Filter>Source Files\abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="rules_engine.cpp">
+      <Filter>Source Files\abstract</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
