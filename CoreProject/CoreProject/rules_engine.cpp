@@ -5,7 +5,7 @@
 
 using namespace std;
 
-unordered_map<string, vector<string>> rulesEngine::get_rules_map()
+unordered_map<string, vector<string>> rulesEngine::get_rules_map() const
 {
 	unordered_map<string, vector<string>> res;
 	
@@ -21,6 +21,22 @@ unordered_map<string, vector<string>> rulesEngine::get_rules_map()
 	}
 
 	return res;
+}
+
+bool rulesEngine::get_rule_param(vector<string> &params, const string &ruleGroup, const string &ruleName) const
+{
+	auto it1 = _availibleRules.find(ruleGroup);
+	if (it1 != _availibleRules.end())
+	{
+		auto it2 = it1->second.find(ruleName);
+		if (it2 != it1->second.end())
+		{
+			params = it2->second->get_param_list();
+			return true;
+		}
+	}
+
+	return false;
 }
 
 double rulesEngine::load_start_data(diagramData &data, const string &fileName)
@@ -44,6 +60,18 @@ double rulesEngine::load_start_data(diagramData &data, const string &fileName)
 	_range = N * dT * RANGE_MULT;
 	_testData = temp;
 	data = temp;
+	return _range;
+}
+
+double rulesEngine::set_data(int N, double dT, const diagramData &data)
+{
+	if (data.size() != N)
+	{
+		return 0;
+	}
+
+	_testData = data;
+	_range = N * dT * RANGE_MULT;
 	return _range;
 }
 
@@ -80,6 +108,23 @@ bool rulesEngine::remove_rule(int id)
 
 	delete _usedRules[id];
 	_usedRules.erase(id);
+	return true;
+}
+
+bool rulesEngine::set_result_rule(int id)
+{
+	if (id == 0)
+	{
+		_result = NULL;
+		return true;
+	}
+
+	if (_usedRules.find(id) == _usedRules.end())
+	{
+		return false;
+	}
+
+	_result = _usedRules[id];
 	return true;
 }
 
@@ -120,7 +165,7 @@ void rulesEngine::add_rule(const abstractRule* r)
 	_availibleRules[copy->get_group_name()][copy->get_name()] = copy;
 }
 
-abstractRule* rulesEngine::get_result()
+abstractRule* rulesEngine::get_result() const
 {
 	return _result->copy();
 }

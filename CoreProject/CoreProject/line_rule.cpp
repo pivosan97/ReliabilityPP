@@ -10,17 +10,17 @@ abstractRule* lineRule::copy() const
 	return copy;
 }
 
-std::string lineRule::get_name()
+std::string lineRule::get_name() const
 {
 	return "Line";
 }
 
-string lineRule::get_group_name()
+string lineRule::get_group_name() const
 {
 	return TWO_PARAM_RULE;
 }
 
-std::vector<std::string> lineRule::get_param_list()
+std::vector<std::string> lineRule::get_param_list() const
 {
 	return { "a", "b" };
 }
@@ -39,7 +39,7 @@ bool lineRule::set_param(std::vector<double> params)
 	return true;
 }
 
-bool lineRule::count(double &y, double x)
+bool lineRule::count(double &y, double x) const
 {
 	if (isValid == false)
 	{
