@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <map>
 #include <vector>
-#include "abstract_rule.h"
+#include "AbstractRule.h"
 
 #define diagramData std::vector<std::pair<double, double>>
 #define RANGE_MULT 1.2 //increase diagram range

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "line_rule.h"
+#include "LineRule.h"
 
 using namespace std;
 
