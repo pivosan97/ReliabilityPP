@@ -29,19 +29,24 @@ bool lineRule::set_param(std::vector<double> params)
 {
 	if (params.size() != 2)
 	{
-		isValid = false;
+		_isValid = false;
 		return false;
 	}
 
 	_a = params[0];
 	_b = params[1];
-	isValid = true;
+	_isValid = true;
 	return true;
+}
+
+bool lineRule::isValid() const
+{
+	return _isValid;
 }
 
 bool lineRule::count(double &y, double x) const
 {
-	if (isValid == false)
+	if (_isValid == false)
 	{
 		return false;
 	}

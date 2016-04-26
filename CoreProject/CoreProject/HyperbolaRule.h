@@ -1,12 +1,14 @@
 #pragma once
+#include <minmax.h>
 #include "AbstractRule.h"
 
 class hyperbolaRule : abstractRule
 {
-	//y = a * 1/x
+	//y = a / (x+a), [0, +inf]
 private:
 	double _a;
-	bool isValid = false;
+	bool _isValid = false;
+	double _min = 0, _max = MAXLONGLONG;
 
 public:
 	abstractRule* copy() const;
@@ -18,6 +20,8 @@ public:
 	std::vector<std::string> get_param_list() const;
 
 	bool set_param(std::vector<double> params);
+
+	bool isValid() const;
 
 	bool count(double &y, double x) const;
 };

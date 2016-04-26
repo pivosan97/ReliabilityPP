@@ -85,14 +85,19 @@ int rulesEngine::create_new_rule(diagramData& data, const std::string &ruleGroup
 	
 	abstractRule *copy = _availibleRules[ruleGroup][ruleName]->copy();
 	if (copy->set_param(ruleParam) == false)
+	{
 		return 0;
+	}
 
 	data.clear();
 	for (int i = 0; i < POINT_NUM; i++)
 	{
-		double x = i * _range / POINT_NUM;
-		double y = copy->count(y, x);
-		data.push_back(make_pair(x, y));
+		double y, x = i * _range / POINT_NUM;
+
+		if (copy->count(y, x))
+		{
+			data.push_back(make_pair(x, y));
+		}
 	}
 
 	_ruleID++;

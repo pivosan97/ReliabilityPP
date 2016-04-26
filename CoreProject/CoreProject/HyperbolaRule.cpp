@@ -29,22 +29,32 @@ bool hyperbolaRule::set_param(std::vector<double> params)
 {
 	if (params.size() != 1)
 	{
-		isValid = false;
+		_isValid = false;
 		return false;
 	}
 
 	_a = params[0];
-	isValid = true;
+	_isValid = true;
 	return true;
+}
+
+bool hyperbolaRule::isValid() const
+{
+	return _isValid;
 }
 
 bool hyperbolaRule::count(double &y, double x) const
 {
-	if (isValid == false)
+	if (_isValid == false)
 	{
 		return false;
 	}
 
-	y = _a / x;
+	if (x < _min || x > _max)
+	{
+		return false;
+	}
+
+	y = _a / (x + _a);
 	return true;
 }

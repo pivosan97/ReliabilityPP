@@ -6,7 +6,7 @@ class lineRule : abstractRule
 	//y = a * x + b
 private:
 	double _a, _b;
-	bool isValid = false;
+	bool _isValid = false;
 
 public:
 	abstractRule* copy() const;
@@ -18,6 +18,8 @@ public:
 	std::vector<std::string> get_param_list() const;
 
 	bool set_param(std::vector<double> params);
+
+	bool isValid() const;
 
 	bool count(double &y, double x) const;
 };

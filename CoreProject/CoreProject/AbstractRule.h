@@ -23,6 +23,9 @@ public:
 	//return true if param valid
 	virtual bool set_param(std::vector<double> params) = 0;
 
+	//return true if rule have valid parameters
+	virtual bool isValid() const = 0;
+
 	//return true and fill y if param valid
 	virtual bool count(double &y, double x) const = 0;
 };
