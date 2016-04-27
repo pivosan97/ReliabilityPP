@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{352F5B6B-6F02-4030-B513-C1BC7FDD0D15}</ProjectGuid>
+    <ProjectGuid>{A489F1C3-2AC3-4F33-A38C-1B35357FA578}</ProjectGuid>
     <RootNamespace>CoreProject</RootNamespace>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
@@ -101,22 +101,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AbstractRule.h" />
     <ClInclude Include="CoreProject.h" />
     <ClInclude Include="CoreProjectDlg.h" />
-    <ClInclude Include="HyperbolaRule.h" />
-    <ClInclude Include="LineRule.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RulesEngine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoreProject.cpp" />
     <ClCompile Include="CoreProjectDlg.cpp" />
-    <ClCompile Include="HyperbolaRule.cpp" />
-    <ClCompile Include="LineRule.cpp" />
-    <ClCompile Include="RulesEngine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -134,4 +127,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="CoreProject.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

@@ -77,7 +77,7 @@ BOOL CCoreProjectDlg::OnInitDialog()
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	CMenu* pSysMenu = GetSystemMenu(IDR_MENU1);
 	if (pSysMenu != NULL)
 	{
 		BOOL bNameValid;
