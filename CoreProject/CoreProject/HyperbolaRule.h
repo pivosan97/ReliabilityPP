@@ -2,7 +2,7 @@
 #include <minmax.h>
 #include "AbstractRule.h"
 
-class hyperbolaRule : abstractRule
+class hyperbolaRule : public abstractRule
 {
 	//y = a / (x+a), [0, +inf]
 private:

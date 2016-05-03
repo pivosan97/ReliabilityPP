@@ -1,7 +1,7 @@
 #pragma once
 #include "AbstractRule.h"
 
-class lineRule : abstractRule
+class lineRule : public abstractRule
 {
 	//y = a * x + b
 private:
