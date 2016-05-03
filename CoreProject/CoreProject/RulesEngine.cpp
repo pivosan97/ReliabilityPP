@@ -18,6 +18,7 @@ unordered_map<string, vector<string>> rulesEngine::get_rules_map() const
 			res[it1->first].push_back(it2->first);
 			it2++;
 		}
+		it1++;
 	}
 
 	return res;
@@ -101,6 +102,7 @@ int rulesEngine::create_new_rule(diagramData& data, const std::string &ruleGroup
 	}
 
 	_ruleID++;
+	_usedRules[_ruleID] = copy;
 	return _ruleID;
 }
 
