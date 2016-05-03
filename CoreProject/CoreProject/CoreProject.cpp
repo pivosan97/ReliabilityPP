@@ -70,15 +70,49 @@ BOOL CCoreProjectApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	CCoreProjectDlg dlg;
-	m_pMainWnd = &dlg;
-	INT_PTR nResponse = dlg.DoModal();
-	if (nResponse == IDOK)
+	
+
+	rulesEngine forceEngine;
+	lineRule line;
+	hyperbolaRule hyperbola;
+	forceEngine.add_rule(&line);
+	forceEngine.add_rule(&hyperbola);
+
+	CCoreProjectDlg dlg(&forceEngine);
+
+//	m_pMainWnd = &dlg;
+	INT_PTR nResponse=-1;
+	while (true)
 	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with OK
+		if (nResponse == -1){
+			nResponse = dlg.DoModal();
+		}
+		if (nResponse == IDOK)
+		{
+			rulesEngine shortEngine;
+			if (dlg.selectedRule.second == "Line")
+			{
+				shortEngine.add_rule(&line);
+			}
+			else if (dlg.selectedRule.second == "Hyperbola")
+			{
+				shortEngine.add_rule(&hyperbola);
+			}
+			CCoreProjectDlg shortDlg(&shortEngine);
+			shortDlg.isShort = true;
+			nResponse = shortDlg.DoModal();
+		}
+		if (nResponse == IDBACK)
+		{
+			nResponse=dlg.DoModal();
+		}
+		if (nResponse != IDOK && nResponse != IDBACK && nResponse != -1)
+		{
+			break;
+		}
+		
 	}
-	else if (nResponse == IDCANCEL)
+	if (nResponse == IDCANCEL)
 	{
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with Cancel
