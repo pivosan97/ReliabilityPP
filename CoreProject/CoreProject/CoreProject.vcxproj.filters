@@ -13,63 +13,75 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Rules">
+      <UniqueIdentifier>{269245bf-ba08-46d3-b5fe-f11a1b97361c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{24ad12de-fc5c-4484-a2ac-4dcd0e019ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rules">
+      <UniqueIdentifier>{c93b2e0e-ccf7-40b5-b802-fa4675fcbe97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{18c74124-5a36-447e-a7a0-1794215e6ebb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoreProject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CoreProjectDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AbstractRule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HyperbolaRule.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rules</Filter>
     </ClInclude>
     <ClInclude Include="LineRule.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rules</Filter>
     </ClInclude>
     <ClInclude Include="RulesEngine.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="HyperbolaRule.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreProject.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreProjectDlg.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="ParamDialog.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CoreProject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CoreProjectDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HyperbolaRule.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rules</Filter>
     </ClCompile>
     <ClCompile Include="LineRule.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rules</Filter>
     </ClCompile>
     <ClCompile Include="RulesEngine.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreProject.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreProjectDlg.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="ParamDialog.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
