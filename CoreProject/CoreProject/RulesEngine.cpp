@@ -25,17 +25,24 @@ unordered_map<string, vector<string>> rulesEngine::get_rules_map() const
 	return res;
 }
 
-bool rulesEngine::get_rule_param(vector<string> &params, const string &ruleGroup, const string &ruleName) const
+bool rulesEngine::get_rule_param(vector<string> &params, const string &ruleName) const
 {
-	auto it1 = _availibleRules.find(ruleGroup);
-	if (it1 != _availibleRules.end())
+	auto it1 = _availibleRules.begin();
+	while (it1 != _availibleRules.end())
 	{
-		auto it2 = it1->second.find(ruleName);
-		if (it2 != it1->second.end())
+		auto it2 = it1->second.begin();
+		while (it2 != it1->second.end())
 		{
-			params = it2->second->get_param_list();
-			return true;
+			if (it2->second->get_name().compare(ruleName) == 0)
+			{
+				params = it2->second->get_param_list();
+				return true;
+			}
+
+			it2++;
 		}
+
+		it1++;
 	}
 
 	return false;

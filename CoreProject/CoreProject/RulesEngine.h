@@ -27,7 +27,7 @@ public:
 	std::unordered_map<std::string, std::vector<std::string>> get_rules_map() const;
 
 	//if ok -> return true and fill params, else return false
-	bool get_rule_param(std::vector<std::string> &params, const std::string &ruleGroup, const std::string &ruleName) const;
+	bool get_rule_param(std::vector<std::string> &params, const std::string &ruleName) const;
 
 	//if ok -> return diagram range and fill data, else return 0
 	double load_start_data(diagramData &data, const std::string &fileName);
