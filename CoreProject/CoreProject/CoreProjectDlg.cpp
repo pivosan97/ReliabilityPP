@@ -243,11 +243,12 @@ void CCoreProjectDlg::OnChooseRule(UINT nID)
 			parameters.push_back(dial.secondParam);
 		}
 		diagramData tempData;
-		engine->create_new_rule(tempData, rulesGroup, ruleName, parameters);
+		double temp;
+		engine->create_new_rule(tempData, temp, temp, temp, rulesGroup, ruleName, parameters);
 		usedRules.push_back(tempData); 
 		CString result = menuItem + _T(": ");
 		std::vector<std::string> paramNames;
-		engine->get_rule_param(paramNames, rulesGroup, ruleName);
+		engine->get_rule_param(paramNames, ruleName);
 		for (int i = 0; i < parameters.size(); i++)
 		{
 			CString temp1,temp2;

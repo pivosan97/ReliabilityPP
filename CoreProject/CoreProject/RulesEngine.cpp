@@ -144,7 +144,7 @@ bool rulesEngine::set_result_rule(int id)
 		return false;
 	}
 
-	_result = _usedRules[id];
+	_result = _usedRules[id]->copy();
 	return true;
 }
 
