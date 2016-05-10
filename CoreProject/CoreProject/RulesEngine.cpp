@@ -40,6 +40,27 @@ bool rulesEngine::get_rule_param(vector<string> &params, const string &ruleGroup
 	return false;
 }
 
+diagramData count_P(vector<int> data, double dT)
+{
+	diagramData out;
+
+	int N = 0;
+	for (int i = 0; i < data.size(); i++)
+	{
+		N += data[i];
+	}
+
+	out.push_back(make_pair(0, 1));
+	double temp = 0;
+	for (int i = 0; i < data.size(); i++)
+	{
+		temp += data[i];
+		out.push_back(make_pair((i + 1) * dT, 1 - temp / N));
+	}
+
+	return out;
+}
+
 double rulesEngine::load_start_data(diagramData &data, const string &fileName)
 {
 	ifstream in(fileName);
@@ -49,18 +70,17 @@ double rulesEngine::load_start_data(diagramData &data, const string &fileName)
 	in >> N;
 	in >> dT;
 	
-	vector<pair<double, double>> temp;
-	temp.push_back(make_pair(0, 1)); //P(0) = 1
+	vector<int> buf;
+	int temp;
 	for (int i = 0; i < N; i++)
 	{
-		int val;
-		in >> val;
-		temp.push_back(make_pair((i + 0.5) * dT, val));
+		in >> temp;
+		buf.push_back(temp);
 	}
 
 	_range = N * dT * RANGE_MULT;
-	_testData = temp;
-	data = temp;
+	_testData = count_P(buf, dT);
+	data = _testData;
 	return _range;
 }
 
