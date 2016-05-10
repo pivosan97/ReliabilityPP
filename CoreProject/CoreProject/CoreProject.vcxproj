@@ -104,6 +104,7 @@
     <ClInclude Include="AbstractRule.h" />
     <ClInclude Include="CoreProject.h" />
     <ClInclude Include="CoreProjectDlg.h" />
+    <ClInclude Include="help_func.h" />
     <ClInclude Include="HyperbolaRule.h" />
     <ClInclude Include="LineRule.h" />
     <ClInclude Include="ParamDialog.h" />
@@ -115,6 +116,7 @@
   <ItemGroup>
     <ClCompile Include="CoreProject.cpp" />
     <ClCompile Include="CoreProjectDlg.cpp" />
+    <ClCompile Include="help_func.cpp" />
     <ClCompile Include="HyperbolaRule.cpp" />
     <ClCompile Include="LineRule.cpp" />
     <ClCompile Include="ParamDialog.cpp" />

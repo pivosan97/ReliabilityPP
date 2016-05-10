@@ -60,6 +60,9 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="help_func.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HyperbolaRule.cpp">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="ParamDialog.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="help_func.cpp">
+      <Filter>Source Files\Rules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

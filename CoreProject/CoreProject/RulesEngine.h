@@ -35,8 +35,9 @@ public:
 	//if ok -> return diagram range, else return 0
 	double set_data(int N, double dT, const diagramData &data);
 
-	//if ok -> return ruleID and fill data, else return 0
-    int create_new_rule(diagramData& data ,const std::string &ruleGroup, const std::string &ruleName, const std::vector<double> ruleParam);
+	//if ok -> return ruleID and fill data & sd & rsd & wsd, else return 0
+    int create_new_rule(diagramData& data , double &sd, double &rsd, double &wsd,
+		const std::string &ruleGroup, const std::string &ruleName, const std::vector<double> ruleParam);
 
 	//return true if valid id
 	bool remove_rule(int id);

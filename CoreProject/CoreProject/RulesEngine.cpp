@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <fstream>
+#include "help_func.h"
 #include "RulesEngine.h"
 
 using namespace std;
@@ -40,27 +41,6 @@ bool rulesEngine::get_rule_param(vector<string> &params, const string &ruleGroup
 	return false;
 }
 
-diagramData count_P(vector<int> data, double dT)
-{
-	diagramData out;
-
-	int N = 0;
-	for (int i = 0; i < data.size(); i++)
-	{
-		N += data[i];
-	}
-
-	out.push_back(make_pair(0, 1));
-	double temp = 0;
-	for (int i = 0; i < data.size(); i++)
-	{
-		temp += data[i];
-		out.push_back(make_pair((i + 1) * dT, 1 - temp / N));
-	}
-
-	return out;
-}
-
 double rulesEngine::load_start_data(diagramData &data, const string &fileName)
 {
 	ifstream in(fileName);
@@ -96,7 +76,8 @@ double rulesEngine::set_data(int N, double dT, const diagramData &data)
 	return _range;
 }
 
-int rulesEngine::create_new_rule(diagramData& data, const std::string &ruleGroup, const std::string &ruleName, const std::vector<double> ruleParam)
+int rulesEngine::create_new_rule(diagramData& data, double &sd, double &rsd, double &wsd,
+	const std::string &ruleGroup, const std::string &ruleName, const std::vector<double> ruleParam)
 {
 	if (_availibleRules.find(ruleGroup) == _availibleRules.end() ||
 		_availibleRules[ruleGroup].find(ruleName) == _availibleRules[ruleGroup].end())
@@ -123,6 +104,11 @@ int rulesEngine::create_new_rule(diagramData& data, const std::string &ruleGroup
 
 	_ruleID++;
 	_usedRules[_ruleID] = copy;
+
+	sd = count_mean_square_deviation(_testData, copy);
+	rsd = count_mean_relative_suare_deviation(_testData, copy);
+	wsd = count_mean_weighted_suare_deviation(_testData, copy);
+
 	return _ruleID;
 }
 
