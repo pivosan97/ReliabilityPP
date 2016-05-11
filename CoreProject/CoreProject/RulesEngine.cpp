@@ -189,3 +189,8 @@ abstractRule* rulesEngine::get_result() const
 {
 	return _result->copy();
 }
+
+bool rulesEngine::is_empty()
+{
+	return !_testData.size();
+}

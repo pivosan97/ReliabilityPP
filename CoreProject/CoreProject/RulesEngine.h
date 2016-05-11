@@ -51,4 +51,6 @@ public:
 
 	//return copy of resul rule, so you should free mem
 	abstractRule* get_result() const;
+
+	bool is_empty();
 };
