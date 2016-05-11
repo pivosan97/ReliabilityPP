@@ -53,6 +53,13 @@ public:
 	afx_msg void OnBnClickedOk();
 	std::pair<std::string, std::string> selectedRule;
 	afx_msg void OnBnClickedBack();
-	std::vector<CString> storage;
+	std::vector<std::vector<CString>> storage;
 	bool isShort;
+	CListBox list3Ctrl;
+	CListBox list4Ctrl;
+	std::vector<COLORREF> itemColors;
+	afx_msg void OnLbnSelchangeList2();
+	afx_msg void OnLbnSelchangeList3();
+	afx_msg void OnLbnSelchangeList4();
+	std::vector<int> rulesId;
 };

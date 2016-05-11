@@ -77,20 +77,6 @@ BOOL CCoreProjectApp::InitInstance()
 
 	rulesEngine forceEngine;
 
-	diagramData test;
-	forceEngine.load_start_data(test, "force.txt");
-
-	std::ofstream out("output.txt");
-	
-	for (int i = 0; i < test.size(); i++)
-	{
-		out << test[i].first << "  " << test[i].second << std::endl;
-	}
-
-	out.close();
-
-	return false;
-
 	lineRule line;
 	hyperbolaRule hyperbola;
 	forceEngine.add_rule(&line);
@@ -108,17 +94,13 @@ BOOL CCoreProjectApp::InitInstance()
 		if (nResponse == IDOK)
 		{
 			rulesEngine shortEngine;
-			if (dlg.selectedRule.second == "Line")
-			{
-				shortEngine.add_rule(&line);
-			}
-			else if (dlg.selectedRule.second == "Hyperbola")
-			{
-				shortEngine.add_rule(&hyperbola);
-			}
+			abstractRule *result = forceEngine.get_result();
+			shortEngine.add_rule(result);
+			delete result;
 			CCoreProjectDlg shortDlg(&shortEngine);
 			shortDlg.isShort = true;
 			nResponse = shortDlg.DoModal();
+			
 		}
 		if (nResponse == IDBACK)
 		{
@@ -146,7 +128,7 @@ BOOL CCoreProjectApp::InitInstance()
 	{
 		delete pShellManager;
 	}
-
+	
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
