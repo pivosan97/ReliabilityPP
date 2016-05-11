@@ -84,39 +84,51 @@ double rulesEngine::set_data(int N, double dT, const diagramData &data)
 }
 
 int rulesEngine::create_new_rule(diagramData& data, double &sd, double &rsd, double &wsd,
-	const std::string &ruleGroup, const std::string &ruleName, const std::vector<double> ruleParam)
+	 const std::string &ruleName, const std::vector<double> ruleParam)
 {
-	if (_availibleRules.find(ruleGroup) == _availibleRules.end() ||
-		_availibleRules[ruleGroup].find(ruleName) == _availibleRules[ruleGroup].end())
+	auto it1 = _availibleRules.begin();
+	while (it1 != _availibleRules.end())
 	{
-		return 0;
-	}
-	
-	abstractRule *copy = _availibleRules[ruleGroup][ruleName]->copy();
-	if (copy->set_param(ruleParam) == false)
-	{
-		return 0;
-	}
-
-	data.clear();
-	for (int i = 0; i < POINT_NUM; i++)
-	{
-		double y, x = i * _range / POINT_NUM;
-
-		if (copy->count(y, x))
+		auto it2 = it1->second.begin();
+		while (it2 != it1->second.end())
 		{
-			data.push_back(make_pair(x, y));
+			if (it2->second->get_name().compare(ruleName) == 0)
+			{
+				abstractRule *copy = it2->second->copy();
+				if (copy->set_param(ruleParam) == false)
+				{
+					delete copy;
+					return false;
+				}
+
+				data.clear();
+				for (int i = 0; i < POINT_NUM; i++)
+				{
+					double y, x = i * _range / POINT_NUM;
+
+					if (copy->count(y, x))
+					{
+						data.push_back(make_pair(x, y));
+					}
+				}
+
+				_ruleID++;
+				_usedRules[_ruleID] = copy;
+
+				sd = count_mean_square_deviation(_testData, copy);
+				rsd = count_mean_relative_suare_deviation(_testData, copy);
+				wsd = count_mean_weighted_suare_deviation(_testData, copy);
+
+				return _ruleID;
+			}
+
+			it2++;
 		}
+
+		it1++;
 	}
 
-	_ruleID++;
-	_usedRules[_ruleID] = copy;
-
-	sd = count_mean_square_deviation(_testData, copy);
-	rsd = count_mean_relative_suare_deviation(_testData, copy);
-	wsd = count_mean_weighted_suare_deviation(_testData, copy);
-
-	return _ruleID;
+	return false;
 }
 
 bool rulesEngine::remove_rule(int id)
