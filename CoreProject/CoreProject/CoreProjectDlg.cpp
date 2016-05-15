@@ -91,8 +91,44 @@ BOOL CCoreProjectDlg::OnInitDialog()
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
+	//int width = GetSystemMetrics(SM_CXSCREEN);
+	RECT workArea,previousPosition;
+	this->GetWindowRect(&previousPosition);
+	SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+	this->SetWindowPos(NULL, workArea.left, workArea.top, 0.8*workArea.right, 0.8*workArea.bottom, SWP_SHOWWINDOW);
+	this->GetWindowRect(&workArea);
 	CMenu* pSysMenu = GetSystemMenu(IDR_MENU1);
 
+	RECT tempWindowPos;
+	CWnd* temp = this->GetDlgItem(IDOK);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->MoveWindow(tempWindowPos.left,
+		workArea.bottom-100, tempWindowPos.right - tempWindowPos.left,
+		tempWindowPos.bottom-tempWindowPos.top,true);
+	
+	temp = this->GetDlgItem(IDBACK);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->MoveWindow(tempWindowPos.left,
+		workArea.bottom - 100, tempWindowPos.right - tempWindowPos.left,
+		tempWindowPos.bottom - tempWindowPos.top, true);
+
+	temp = this->GetDlgItem(IDC_LIST2);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL,tempWindowPos.left,
+		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
+		workArea.bottom - 150, SWP_NOMOVE);
+
+	temp = this->GetDlgItem(IDC_LIST3);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL, tempWindowPos.left,
+		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
+		workArea.bottom - 150, SWP_NOMOVE);
+
+	temp = this->GetDlgItem(IDC_LIST4);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL, tempWindowPos.left,
+		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
+		workArea.bottom - 150, SWP_NOMOVE);
 	std::unordered_map<std::string, std::vector<std::string>> rulesMap = engine->get_rules_map();
 	
 	auto it = rulesMap.begin();
@@ -170,7 +206,7 @@ void CCoreProjectDlg::OnPaint()
 		CBrush brush;
 		brush.CreateSolidBrush(itemColors[i]);
 		dc.SelectObject(brush);
-		dc.Rectangle(245,  start+i * 5,265 ,  start+(i + 1) * 5);
+		dc.Rectangle(300,  start+i * 5,320 ,  start+(i + 1) * 5);
 		start += 8;
 	}
 	if (IsIconic())
@@ -274,7 +310,7 @@ void CCoreProjectDlg::OnChooseRule(UINT nID)
 			diagramData tempData;
 			double squareDev, relativeSquareDev, weightedSquareDev;
 			rulesId.push_back(engine->create_new_rule(tempData, squareDev
-				,relativeSquareDev,weightedSquareDev, rulesGroup, ruleName, parameters));
+				,relativeSquareDev,weightedSquareDev, ruleName, parameters));
 			usedRules.push_back(tempData);
 			CString result;
 			for (int i = 0; i < parameters.size(); i++)
