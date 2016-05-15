@@ -66,7 +66,14 @@ double count_mean_relative_suare_deviation(const diagramData &data, const abstra
 		double y;
 		if (rule->count(y, data[i].first))
 		{
-			sum += ((data[i].second - y) / data[i].second) * ((data[i].second - y) / data[i].second);
+			if (data[i].second != 0)
+			{
+				sum += ((data[i].second - y) / data[i].second) * ((data[i].second - y) / data[i].second);
+			}
+			else
+			{
+				return -1;
+			}
 		}
 		else
 		{
@@ -92,7 +99,14 @@ double count_mean_weighted_suare_deviation(const diagramData &data, const abstra
 		double y;
 		if (rule->count(y, data[i].first))
 		{
-			sum += (data[i].second - y) * (data[i].second - y) / data[i].second;
+			if (data[i].second != 0)
+			{
+				sum += (data[i].second - y) * (data[i].second - y) / data[i].second;
+			}
+			else
+			{
+				return -1;
+			}
 		}
 		else
 		{
