@@ -16,6 +16,8 @@ CParamDialog::CParamDialog(CString category,std::vector<std::string> params, CWn
 	, firstParam(0)
 	, secondParam(0)
 	, rulesCategory(category)
+	, fourthParameter(0)
+	, fifthParameter(0)
 {
 	for (int i = 0; i < params.size(); i++)
 	{
@@ -30,8 +32,11 @@ CParamDialog::~CParamDialog()
 void CParamDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, firstParam);
-	DDX_Text(pDX, IDC_EDIT2, secondParam);
+	DDX_Text(pDX, 8000, firstParam);
+	DDX_Text(pDX, 8001, secondParam);
+	DDX_Text(pDX, 8002, thirdParameter);
+	DDX_Text(pDX, 8003, fourthParameter);
+	DDX_Text(pDX, 8004, fifthParameter);
 }
 
 
@@ -47,21 +52,16 @@ END_MESSAGE_MAP()
 BOOL CParamDialog::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
-	if (rulesCategory == "Two parametrs")
-	{
-		CWnd *temp = GetDlgItem(IDC_EDIT2);
-		temp->ShowWindow(SW_SHOW);
-		temp = GetDlgItem(6001);
-		temp->ShowWindow(SW_SHOW);
-	}
 	for (int i = 0; i < paramNames.size(); i++)
 	{
 		CWnd *temp = GetDlgItem(6000+i);
 		CString paramName;
 		paramName.Format(_T("%S"), paramNames[i].c_str());
 		temp->SetWindowTextW(paramName);
-		
+		temp->ShowWindow(SW_SHOW);
+
+		temp = GetDlgItem(8000 + i);
+		temp->ShowWindow(SW_SHOW);
 
 	}
 
