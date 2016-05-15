@@ -1,6 +1,7 @@
 #pragma once
 #include<vector>
 #include "afxcmn.h"
+#include "afxwin.h"
 // CParamDialog dialog
 
 class CParamDialog : public CDialogEx
@@ -31,4 +32,7 @@ public:
 	COLORREF currentColor;
 	afx_msg void OnPaint();
 	
+	double thirdParameter;
+	double fourthParameter;
+	double fifthParameter;
 };
