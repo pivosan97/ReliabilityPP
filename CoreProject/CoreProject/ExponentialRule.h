@@ -2,9 +2,9 @@
 #include <limits.h>
 #include "AbstractRule.h"
 
-class hyperbolaRule : public abstractRule
+class exponentialRule : public abstractRule
 {
-	//y = a / (x+a), [0, +inf]
+	//y = exp(-at) [0, +inf] (a >= 0)
 private:
 	double _a;
 	bool _isValid = false;

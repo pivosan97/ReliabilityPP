@@ -2,11 +2,11 @@
 #include <limits.h>
 #include "AbstractRule.h"
 
-class hyperbolaRule : public abstractRule
+class exponential_exponentialRule : public abstractRule
 {
-	//y = a / (x+a), [0, +inf]
+	//y = c * exp(-a1 * t) + (1 - c) * exp(-a2 * t), [0, +inf] (a >= 0, 0 <= c <= 1)
 private:
-	double _a;
+	double _a1, _a2, _c;
 	bool _isValid = false;
 	double _min = 0, _max = LLONG_MAX;
 
