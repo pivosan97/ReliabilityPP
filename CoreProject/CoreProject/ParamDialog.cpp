@@ -11,13 +11,8 @@
 
 IMPLEMENT_DYNAMIC(CParamDialog, CDialogEx)
 
-CParamDialog::CParamDialog(CString category,std::vector<std::string> params, CWnd* pParent /*=NULL*/)
+CParamDialog::CParamDialog(std::vector<std::string> params, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CParamDialog::IDD, pParent)
-	, firstParam(0)
-	, secondParam(0)
-	, rulesCategory(category)
-	, fourthParameter(0)
-	, fifthParameter(0)
 {
 	for (int i = 0; i < params.size(); i++)
 	{
@@ -32,17 +27,13 @@ CParamDialog::~CParamDialog()
 void CParamDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, 8000, firstParam);
-	DDX_Text(pDX, 8001, secondParam);
-	DDX_Text(pDX, 8002, thirdParameter);
-	DDX_Text(pDX, 8003, fourthParameter);
-	DDX_Text(pDX, 8004, fifthParameter);
 }
 
 
 BEGIN_MESSAGE_MAP(CParamDialog, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CParamDialog::OnChooseColor)
 	ON_WM_PAINT()
+	ON_BN_CLICKED(IDOK, &CParamDialog::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -72,7 +63,7 @@ BOOL CParamDialog::OnInitDialog()
 
 void CParamDialog::OnChooseColor()
 {
-	CColorDialog dlg;
+	CColorDialog dlg(currentColor);
 	if (dlg.DoModal() == IDOK)
 	{
 		currentColor = dlg.GetColor();
@@ -93,21 +84,23 @@ void CParamDialog::OnPaint()
 	brush.CreateSolidBrush(currentColor);
 	//oldBrush=CBrush::FromHandle((HBRUSH));
 	dc.SelectObject(brush);
-	dc.Rectangle(200, 140, 225, 165);
-	//dc.SelectObject(oldBrush);
-	// TODO: Add your message handler code here
-	// Do not call CDialogEx::OnPaint() for painting messages
+	RECT rect;
+	GetClientRect(&rect);
+	dc.Rectangle(210,348,230,368);
+	
+
 }
 
 
-/*HBRUSH CParamDialog::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+void CParamDialog::OnBnClickedOk()
 {
-	switch (nCtlColor)
+	// TODO: Add your control notification handler code here
+	resultParams.clear();
+	for (int i = 0; i < paramNames.size(); i++)
 	{
-	case CTLCOLOR_:
-		pDC->SetTextColor(RGB(255, 0, 0));
-		return (HBRUSH)GetStockObject(NULL_BRUSH);
-	default:
-		return CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
+		CString temp;
+		this->GetDlgItemText(8000 + i, temp);
+		resultParams.push_back(_tstof(temp));
 	}
-}*/
+	CDialogEx::OnOK();
+}

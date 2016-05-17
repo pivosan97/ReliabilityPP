@@ -9,7 +9,7 @@ class CParamDialog : public CDialogEx
 	DECLARE_DYNAMIC(CParamDialog)
 
 public:
-	CParamDialog(CString category,  std::vector<std::string> params,CWnd* pParent = NULL);   // standard constructor
+	CParamDialog(  std::vector<std::string> params,CWnd* pParent = NULL);   // standard constructor
 	virtual ~CParamDialog();
 
 // Dialog Data
@@ -19,9 +19,6 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
-public:
-	double firstParam;
-	double secondParam;
 private:
 	CString rulesCategory;
 	std::vector<std::string> paramNames;
@@ -31,8 +28,7 @@ public:
 	afx_msg void OnChooseColor();
 	COLORREF currentColor;
 	afx_msg void OnPaint();
-	
-	double thirdParameter;
-	double fourthParameter;
-	double fifthParameter;
+
+	std::vector<double> resultParams;
+	afx_msg void OnBnClickedOk();
 };

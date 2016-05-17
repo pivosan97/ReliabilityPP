@@ -51,6 +51,7 @@ END_MESSAGE_MAP()
 CCoreProjectDlg::CCoreProjectDlg(rulesEngine* newEngine,CWnd* pParent /*=NULL*/)
 	: CDialogEx(CCoreProjectDlg::IDD, pParent)
 	, isShort(false)
+	, range(0)
 {
 	engine = newEngine;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -92,45 +93,9 @@ BOOL CCoreProjectDlg::OnInitDialog()
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
 	//int width = GetSystemMetrics(SM_CXSCREEN);
-	RECT workArea,previousPosition;
-	this->GetWindowRect(&previousPosition);
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
-	this->SetWindowPos(NULL, workArea.left, workArea.top, 0.8*workArea.right, 0.8*workArea.bottom, SWP_SHOWWINDOW);
-	this->GetWindowRect(&workArea);
 	CMenu* pSysMenu = GetSystemMenu(IDR_MENU1);
-
-	RECT tempWindowPos;
-	CWnd* temp = this->GetDlgItem(IDOK);
-	temp->GetWindowRect(&tempWindowPos);
-	temp->MoveWindow(tempWindowPos.left,
-		workArea.bottom-100, tempWindowPos.right - tempWindowPos.left,
-		tempWindowPos.bottom-tempWindowPos.top,true);
-	
-	temp = this->GetDlgItem(IDBACK);
-	temp->GetWindowRect(&tempWindowPos);
-	temp->MoveWindow(tempWindowPos.left,
-		workArea.bottom - 100, tempWindowPos.right - tempWindowPos.left,
-		tempWindowPos.bottom - tempWindowPos.top, true);
-
-	temp = this->GetDlgItem(IDC_LIST2);
-	temp->GetWindowRect(&tempWindowPos);
-	temp->SetWindowPos(NULL,tempWindowPos.left,
-		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
-		workArea.bottom - 150, SWP_NOMOVE);
-
-	temp = this->GetDlgItem(IDC_LIST3);
-	temp->GetWindowRect(&tempWindowPos);
-	temp->SetWindowPos(NULL, tempWindowPos.left,
-		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
-		workArea.bottom - 150, SWP_NOMOVE);
-
-	temp = this->GetDlgItem(IDC_LIST4);
-	temp->GetWindowRect(&tempWindowPos);
-	temp->SetWindowPos(NULL, tempWindowPos.left,
-		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
-		workArea.bottom - 150, SWP_NOMOVE);
 	std::unordered_map<std::string, std::vector<std::string>> rulesMap = engine->get_rules_map();
-	
+
 	auto it = rulesMap.begin();
 	int idInner = 7000;
 	while (it != rulesMap.end())
@@ -148,7 +113,7 @@ BOOL CCoreProjectDlg::OnInitDialog()
 		}
 		CString popupName;
 		popupName.Format(_T("%S"), it->first.c_str());
-		this->GetMenu()->AppendMenu(MF_POPUP, (UINT_PTR)menu->m_hMenu,popupName);
+		this->GetMenu()->AppendMenu(MF_POPUP, (UINT_PTR)menu->m_hMenu, popupName);
 		it++;
 	}
 
@@ -163,6 +128,43 @@ BOOL CCoreProjectDlg::OnInitDialog()
 		CWnd* temp = this->GetDlgItem(IDBACK);
 		temp->EnableWindow(true);
 	}
+
+	RECT workArea, previousPosition;
+	this->GetWindowRect(&previousPosition);
+	SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+	this->SetWindowPos(NULL, workArea.left, workArea.top, 1*workArea.right, 1*workArea.bottom, SWP_SHOWWINDOW |SWP_NOZORDER);
+	this->GetWindowRect(&workArea);
+
+	RECT tempWindowPos;
+	CWnd* temp = this->GetDlgItem(IDOK);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL,tempWindowPos.left,
+		workArea.bottom-100, tempWindowPos.right - tempWindowPos.left,
+		tempWindowPos.bottom - tempWindowPos.top, SWP_SHOWWINDOW | SWP_NOZORDER);
+	
+	temp = this->GetDlgItem(IDBACK);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL,tempWindowPos.left,
+		workArea.bottom - 100, tempWindowPos.right - tempWindowPos.left,
+		tempWindowPos.bottom - tempWindowPos.top, SWP_SHOWWINDOW | SWP_NOZORDER);
+
+	temp = this->GetDlgItem(IDC_LIST2);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL,tempWindowPos.left,
+		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
+		workArea.bottom - 150, SWP_NOMOVE | SWP_NOZORDER);
+
+	temp = this->GetDlgItem(IDC_LIST3);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL, tempWindowPos.left,
+		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
+		workArea.bottom - 150, SWP_NOMOVE | SWP_NOZORDER);
+
+	temp = this->GetDlgItem(IDC_LIST4);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL, tempWindowPos.left,
+		tempWindowPos.top, tempWindowPos.right - tempWindowPos.left,
+		workArea.bottom - 150, SWP_NOMOVE | SWP_NOZORDER);
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
@@ -206,9 +208,28 @@ void CCoreProjectDlg::OnPaint()
 		CBrush brush;
 		brush.CreateSolidBrush(itemColors[i]);
 		dc.SelectObject(brush);
-		dc.Rectangle(300,  start+i * 5,320 ,  start+(i + 1) * 5);
+		dc.Rectangle(GRAPH_START - 50, start + i * 5, GRAPH_START - 30, start + (i + 1) * 5);
 		start += 8;
 	}
+	CWnd * list = this->GetDlgItem(IDC_LIST2);
+	RECT listBorders,windowBorders;
+	list->GetWindowRect(&listBorders);
+	this->GetWindowRect(&windowBorders);
+	this->MapWindowPoints(NULL, &windowBorders);
+
+	CDC* memDC = new CDC;
+	CDC* screenDC = GetDC();
+	memDC->CreateCompatibleDC(screenDC);
+	CBitmap *pb = new CBitmap;
+	pb->CreateCompatibleBitmap(screenDC, windowBorders.right - 30 - GRAPH_START, listBorders.bottom - listBorders.top);
+	CBitmap *pob = memDC->SelectObject(pb);
+	
+	DrawGraphs(memDC, windowBorders.right - 30 - GRAPH_START, listBorders.bottom - listBorders.top);
+
+	memDC->SelectObject(pob);
+	CImage final;
+	final.Attach((HBITMAP)(*pb));
+	final.StretchBlt((&dc)->m_hDC, GRAPH_START, listBorders.top - windowBorders.top, windowBorders.right - 30 - GRAPH_START, listBorders.bottom - listBorders.top, 0, 0, final.GetWidth(), final.GetHeight(), SRCCOPY);
 	if (IsIconic())
 	{
 		// device context for painting
@@ -254,7 +275,7 @@ void CCoreProjectDlg::OnLoadData()
 
 		diagramData tempData;
 
-		engine->load_start_data(tempData, pathName);
+		range=engine->load_start_data(tempData, pathName);
 	
 		//GetSystemMenu(TRUE);
 	}
@@ -271,68 +292,53 @@ void CCoreProjectDlg::OnChooseRule(UINT nID)
 	}
 	else
 	{
-		CString menuItem, subMenu;
-		std::string rulesGroup, ruleName;
-		this->GetMenu()->GetMenuString(nID, menuItem, MF_BYCOMMAND);
-		std::unordered_map<std::string, std::vector<std::string>> rulesMap = engine->get_rules_map();
+		CString menuItem;
 
-		auto it = rulesMap.begin();
-		while (it != rulesMap.end())
-		{
-			auto it2 = it->second.begin();
-			while (it2 != it->second.end())
-			{
-				CString tempItem;
-				tempItem.Format(_T("%S"), it2->c_str());
-				if (tempItem == menuItem)
-				{
-					subMenu.Format(_T("%S"), it->first.c_str());
-					rulesGroup = it->first;
-					ruleName = *(it2);
-					break;
-				}
-				it2++;
-			}
-			it++;
-		}
+		this->GetMenu()->GetMenuString(nID, menuItem, MF_BYCOMMAND);
+		CT2CA pszConvertedAnsiString(menuItem);
+		std::string  ruleName(pszConvertedAnsiString);
+
 		std::vector<std::string> paramNames;
 		engine->get_rule_param(paramNames, ruleName);
-		CParamDialog dial(subMenu,paramNames);
+		CParamDialog dial(paramNames);
 		if (dial.DoModal() == IDOK)
 		{
 			std::vector<double> parameters;
-			parameters.push_back(dial.firstParam);
-			if (subMenu == "Two parametrs")
+			for (int i = 0; i < paramNames.size(); i++)
 			{
-				parameters.push_back(dial.secondParam);
+				parameters.push_back(dial.resultParams[i]);
 			}
-			
 			diagramData tempData;
-			double squareDev, relativeSquareDev, weightedSquareDev;
+			double squareDev=0, relativeSquareDev=0, weightedSquareDev=0;
 			rulesId.push_back(engine->create_new_rule(tempData, squareDev
 				,relativeSquareDev,weightedSquareDev, ruleName, parameters));
 			usedRules.push_back(tempData);
 			CString result;
+			std::ostringstream temp3;
+			temp3.setf(std::ios::fixed);
+			temp3.precision(3);
 			for (int i = 0; i < parameters.size(); i++)
 			{
 				CString temp1, temp2;
-				std::ostringstream temp3;
 				temp3.str("");
-				temp3 << std::setprecision(5) << parameters[i];
+				temp3<< parameters[i];
 				temp1.Format(_T("%S"), temp3.str().c_str());
 				temp2.Format(_T("%S"), paramNames[i].c_str());
 				result += temp2 + "=" + temp1 + _T(" ");
 			}
+			temp3.str("");
+			temp3 << squareDev << "; " << relativeSquareDev << "; " << weightedSquareDev;
+			CString deviationString;
+
+			deviationString.Format(_T("%S"), temp3.str().c_str());
 			listCtrl.AddString(menuItem);
 			list3Ctrl.AddString(result);
-			list4Ctrl.AddString(_T("0"));
+			list4Ctrl.AddString(deviationString);
 
 			itemColors.push_back(dial.currentColor);
 			RECT rect;
 			this->GetClientRect(&rect);
 			this->InvalidateRect(&rect);
-			selectedRule.first = rulesGroup;
-			selectedRule.second = ruleName;
 		}
 	}
 	
@@ -396,4 +402,34 @@ void CCoreProjectDlg::OnLbnSelchangeList4()
 	list3Ctrl.SetCurSel(list4Ctrl.GetCurSel());
 	listCtrl.SetCurSel(list4Ctrl.GetCurSel());
 	// TODO: Add your control notification handler code here
+}
+
+
+void CCoreProjectDlg::DrawGraphs(CDC* memDC,int width,int height)
+{
+	CBrush* oldBrush = (CBrush*)memDC->SelectStockObject(WHITE_BRUSH);
+	memDC->Rectangle(0, 0,width, height);
+	memDC->SelectObject(oldBrush);
+
+	double koeffX = 1.*(width-30) / range, koeffY = (height-30) / 1.3;
+	int startX = 15, startY = -15;
+	for (int i = 0; i < usedRules.size(); i++)
+	{
+		CPen* pen=new CPen();
+		CBrush* brush = new CBrush();
+		pen->CreatePen(PS_SOLID, 2, itemColors[i]);
+		brush->CreateSolidBrush(itemColors[i]);
+		CPen* oldPen = memDC->SelectObject(pen);
+		oldBrush = memDC->SelectObject(brush);
+		int pointR = 2;
+		for (int j = 0; j < usedRules[i].size()-1; j++)
+		{
+			memDC->MoveTo(startX + usedRules[i][j].first*koeffX, startY+ height - usedRules[i][j].second*koeffY);
+			memDC->Ellipse(startX + usedRules[i][j].first*koeffX - 3, startY + height - usedRules[i][j].second*koeffY - 3, startX + usedRules[i][j].first*koeffX + 3, startY + height - usedRules[i][j].second*koeffY + 3);
+			memDC->LineTo(startX + usedRules[i][j + 1].first*koeffX, startY + height - usedRules[i][j + 1].second*koeffY);
+		}
+
+		memDC->SelectObject(oldPen);
+		memDC->SelectObject(oldBrush);
+	}
 }

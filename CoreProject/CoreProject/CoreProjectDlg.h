@@ -48,10 +48,10 @@ public:
 	std::vector<diagramData> usedRules;
 private:
 	void OnChooseRule(UINT nID);
+    int GRAPH_START = 480;
 public:
 	CListBox listCtrl;
 	afx_msg void OnBnClickedOk();
-	std::pair<std::string, std::string> selectedRule;
 	afx_msg void OnBnClickedBack();
 	std::vector<std::vector<CString>> storage;
 	bool isShort;
@@ -62,4 +62,6 @@ public:
 	afx_msg void OnLbnSelchangeList3();
 	afx_msg void OnLbnSelchangeList4();
 	std::vector<int> rulesId;
+	void DrawGraphs(CDC* memDC, int width, int height);
+	int range;
 };
