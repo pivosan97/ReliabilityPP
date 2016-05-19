@@ -104,6 +104,8 @@
     <ClInclude Include="AbstractRule.h" />
     <ClInclude Include="CoreProject.h" />
     <ClInclude Include="CoreProjectDlg.h" />
+    <ClInclude Include="ExponentialRule.h" />
+    <ClInclude Include="Exponential_ExponentialRule.h" />
     <ClInclude Include="help_func.h" />
     <ClInclude Include="HyperbolaRule.h" />
     <ClInclude Include="LineRule.h" />
@@ -116,6 +118,8 @@
   <ItemGroup>
     <ClCompile Include="CoreProject.cpp" />
     <ClCompile Include="CoreProjectDlg.cpp" />
+    <ClCompile Include="ExponentialRule.cpp" />
+    <ClCompile Include="Exponential_ExponentialRule.cpp" />
     <ClCompile Include="help_func.cpp" />
     <ClCompile Include="HyperbolaRule.cpp" />
     <ClCompile Include="LineRule.cpp" />

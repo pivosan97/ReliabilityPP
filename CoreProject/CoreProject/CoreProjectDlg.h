@@ -64,4 +64,7 @@ public:
 	std::vector<int> rulesId;
 	void DrawGraphs(CDC* memDC, int width, int height);
 	int range;
+	afx_msg void OnMove(int x, int y);
+	afx_msg void OnBnClickedRemove();
+	diagramData initialData;
 };
