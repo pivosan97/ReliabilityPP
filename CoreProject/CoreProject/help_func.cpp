@@ -61,7 +61,7 @@ double count_mean_relative_suare_deviation(const diagramData &data, const abstra
 	}
 
 	double sum = 0;
-	for (int i = 0; i < K; i++)
+	for (int i = 0; i < K-1; i++)
 	{
 		double y;
 		if (rule->count(y, data[i].first))
@@ -81,7 +81,7 @@ double count_mean_relative_suare_deviation(const diagramData &data, const abstra
 		}
 	}
 
-	return sum / K;
+	return sum / (K-1);
 }
 
 double count_mean_weighted_suare_deviation(const diagramData &data, const abstractRule *rule)
@@ -94,7 +94,7 @@ double count_mean_weighted_suare_deviation(const diagramData &data, const abstra
 	}
 
 	double sum = 0;
-	for (int i = 0; i < K; i++)
+	for (int i = 0; i < K-1; i++)
 	{
 		double y;
 		if (rule->count(y, data[i].first))
@@ -114,5 +114,5 @@ double count_mean_weighted_suare_deviation(const diagramData &data, const abstra
 		}
 	}
 
-	return sum / K;
+	return sum / (K-1);
 }
