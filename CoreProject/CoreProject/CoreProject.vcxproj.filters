@@ -63,6 +63,12 @@
     <ClInclude Include="help_func.h">
       <Filter>Header Files\Rules</Filter>
     </ClInclude>
+    <ClInclude Include="ExponentialRule.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Exponential_ExponentialRule.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HyperbolaRule.cpp">
@@ -87,6 +93,12 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="help_func.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Exponential_ExponentialRule.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExponentialRule.cpp">
       <Filter>Source Files\Rules</Filter>
     </ClCompile>
   </ItemGroup>

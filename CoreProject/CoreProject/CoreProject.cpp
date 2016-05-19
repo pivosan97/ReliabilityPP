@@ -5,7 +5,8 @@
 #include "stdafx.h"
 #include "CoreProject.h"
 #include "CoreProjectDlg.h"
-
+#include "exponentialRule.h"
+#include "exponential_exponentialRule.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -74,9 +75,12 @@ BOOL CCoreProjectApp::InitInstance()
 	rulesEngine forceEngine;
 	lineRule line;
 	hyperbolaRule hyperbola;
-	forceEngine.add_rule(&line);
+	exponentialRule exp;
+	exponential_exponentialRule exp_exp;
 	forceEngine.add_rule(&hyperbola);
-
+	forceEngine.add_rule(&exp);
+	forceEngine.add_rule(&line);
+	forceEngine.add_rule(&exp_exp);
 	CCoreProjectDlg dlg(&forceEngine);
 
 //	m_pMainWnd = &dlg;

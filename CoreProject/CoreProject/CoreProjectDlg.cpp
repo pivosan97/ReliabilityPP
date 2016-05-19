@@ -76,6 +76,8 @@ BEGIN_MESSAGE_MAP(CCoreProjectDlg, CDialogEx)
 	ON_LBN_SELCHANGE(IDC_LIST2, &CCoreProjectDlg::OnLbnSelchangeList2)
 	ON_LBN_SELCHANGE(IDC_LIST3, &CCoreProjectDlg::OnLbnSelchangeList3)
 	ON_LBN_SELCHANGE(IDC_LIST4, &CCoreProjectDlg::OnLbnSelchangeList4)
+	ON_WM_MOVE()
+	ON_BN_CLICKED(17000, &CCoreProjectDlg::OnBnClickedRemove)
 END_MESSAGE_MAP()
 
 
@@ -148,6 +150,12 @@ BOOL CCoreProjectDlg::OnInitDialog()
 		workArea.bottom - 100, tempWindowPos.right - tempWindowPos.left,
 		tempWindowPos.bottom - tempWindowPos.top, SWP_SHOWWINDOW | SWP_NOZORDER);
 
+	temp = this->GetDlgItem(17000);
+	temp->GetWindowRect(&tempWindowPos);
+	temp->SetWindowPos(NULL, tempWindowPos.left,
+		workArea.bottom - 100, tempWindowPos.right - tempWindowPos.left,
+		tempWindowPos.bottom - tempWindowPos.top, SWP_SHOWWINDOW | SWP_NOZORDER);
+
 	temp = this->GetDlgItem(IDC_LIST2);
 	temp->GetWindowRect(&tempWindowPos);
 	temp->SetWindowPos(NULL,tempWindowPos.left,
@@ -202,55 +210,60 @@ void CCoreProjectDlg::OnSysCommand(UINT nID, LPARAM lParam)
 void CCoreProjectDlg::OnPaint()
 {
 	CPaintDC dc(this);
-	int start = 16;
-	for (int i = 0; i < itemColors.size(); i++)
+	if (!engine->is_empty())
 	{
-		CBrush brush;
-		brush.CreateSolidBrush(itemColors[i]);
-		dc.SelectObject(brush);
-		dc.Rectangle(GRAPH_START - 50, start + i * 5, GRAPH_START - 30, start + (i + 1) * 5);
-		start += 8;
-	}
-	CWnd * list = this->GetDlgItem(IDC_LIST2);
-	RECT listBorders,windowBorders;
-	list->GetWindowRect(&listBorders);
-	this->GetWindowRect(&windowBorders);
-	this->MapWindowPoints(NULL, &windowBorders);
+		int start = 16;
+		for (int i = 0; i < itemColors.size(); i++)
+		{
+			CBrush brush;
+			brush.CreateSolidBrush(itemColors[i]);
+			dc.SelectObject(brush);
+			dc.Rectangle(GRAPH_START - 50, start + i * 5, GRAPH_START - 30, start + (i + 1) * 5);
+			start += 8;
+		}
+		CWnd * list = this->GetDlgItem(IDC_LIST2);
+		RECT listBorders, windowBorders,workArea;
+		list->GetWindowRect(&listBorders);
+		this->GetWindowRect(&windowBorders);
+		SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+		//this->MapWindowPoints(NULL, &windowBorders);
 
-	CDC* memDC = new CDC;
-	CDC* screenDC = GetDC();
-	memDC->CreateCompatibleDC(screenDC);
-	CBitmap *pb = new CBitmap;
-	pb->CreateCompatibleBitmap(screenDC, windowBorders.right - 30 - GRAPH_START, listBorders.bottom - listBorders.top);
-	CBitmap *pob = memDC->SelectObject(pb);
+		CDC* memDC = new CDC;
+		CDC* screenDC = GetDC();
+		memDC->CreateCompatibleDC(screenDC);
+		CBitmap *pb = new CBitmap;
+		pb->CreateCompatibleBitmap(screenDC, workArea.right - 60 - GRAPH_START, listBorders.bottom - listBorders.top);
+		CBitmap *pob = memDC->SelectObject(pb);
+
+		DrawGraphs(memDC, workArea.right - 60 - GRAPH_START, listBorders.bottom - listBorders.top);
+
+		memDC->SelectObject(pob);
+		CImage final;
+		final.Attach((HBITMAP)(*pb));
+		final.StretchBlt((&dc)->m_hDC, GRAPH_START, listBorders.top - windowBorders.top-50, workArea.right - 60 - GRAPH_START, listBorders.bottom - listBorders.top, 0, 0, final.GetWidth(), final.GetHeight(), SRCCOPY);
+		if (IsIconic())
+		{
+			// device context for painting
+
+			SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+
+			// Center icon in client rectangle
+			int cxIcon = GetSystemMetrics(SM_CXICON);
+			int cyIcon = GetSystemMetrics(SM_CYICON);
+			CRect rect;
+			GetClientRect(&rect);
+			int x = (rect.Width() - cxIcon + 1) / 2;
+			int y = (rect.Height() - cyIcon + 1) / 2;
+
+			// Draw the icon
+			dc.DrawIcon(x, y, m_hIcon);
+		}
+		else
+		{
+			CDialogEx::OnPaint();
+		}
+	}
 	
-	DrawGraphs(memDC, windowBorders.right - 30 - GRAPH_START, listBorders.bottom - listBorders.top);
-
-	memDC->SelectObject(pob);
-	CImage final;
-	final.Attach((HBITMAP)(*pb));
-	final.StretchBlt((&dc)->m_hDC, GRAPH_START, listBorders.top - windowBorders.top, windowBorders.right - 30 - GRAPH_START, listBorders.bottom - listBorders.top, 0, 0, final.GetWidth(), final.GetHeight(), SRCCOPY);
-	if (IsIconic())
-	{
-		// device context for painting
-
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-		// Center icon in client rectangle
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// Draw the icon
-		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
-		CDialogEx::OnPaint();
-	}
 }
 
 // The system calls this function to obtain the cursor to display while the user drags
@@ -273,10 +286,8 @@ void CCoreProjectDlg::OnLoadData()
 		CT2CA pszConvertedAnsiString(fileDlg.GetPathName());
 		std::string pathName(pszConvertedAnsiString);
 
-		diagramData tempData;
-
-		range=engine->load_start_data(tempData, pathName);
-	
+		range=engine->load_start_data(initialData, pathName);
+		this->InvalidateRect(NULL);
 		//GetSystemMenu(TRUE);
 	}
 	// TODO: Add your command handler code here
@@ -408,28 +419,127 @@ void CCoreProjectDlg::OnLbnSelchangeList4()
 void CCoreProjectDlg::DrawGraphs(CDC* memDC,int width,int height)
 {
 	CBrush* oldBrush = (CBrush*)memDC->SelectStockObject(WHITE_BRUSH);
+	CPen* oldPen = new CPen();
 	memDC->Rectangle(0, 0,width, height);
 	memDC->SelectObject(oldBrush);
 
-	double koeffX = 1.*(width-30) / range, koeffY = (height-30) / 1.3;
-	int startX = 15, startY = -15;
+	int startX = 30, startY = -30;
+	double koeffX = (1.*width - 2*startX) / range, koeffY = (1.*height +2*startY) / 1.3;
+	
 	for (int i = 0; i < usedRules.size(); i++)
 	{
-		CPen* pen=new CPen();
+		CPen* pen = new CPen();
 		CBrush* brush = new CBrush();
-		pen->CreatePen(PS_SOLID, 2, itemColors[i]);
+		pen->CreatePen(PS_SOLID, 3, itemColors[i]);
 		brush->CreateSolidBrush(itemColors[i]);
-		CPen* oldPen = memDC->SelectObject(pen);
+		oldPen= memDC->SelectObject(pen);
 		oldBrush = memDC->SelectObject(brush);
 		int pointR = 2;
 		for (int j = 0; j < usedRules[i].size()-1; j++)
 		{
-			memDC->MoveTo(startX + usedRules[i][j].first*koeffX, startY+ height - usedRules[i][j].second*koeffY);
-			memDC->Ellipse(startX + usedRules[i][j].first*koeffX - 3, startY + height - usedRules[i][j].second*koeffY - 3, startX + usedRules[i][j].first*koeffX + 3, startY + height - usedRules[i][j].second*koeffY + 3);
-			memDC->LineTo(startX + usedRules[i][j + 1].first*koeffX, startY + height - usedRules[i][j + 1].second*koeffY);
+			memDC->MoveTo(startX + (int)(usedRules[i][j].first*koeffX), startY+ height - (int)(usedRules[i][j].second*koeffY));
+		//	memDC->Ellipse(startX + (int)(usedRules[i][j].first*koeffX - 3.0), startY + height - (int)(usedRules[i][j].second*koeffY) - 3, startX + (int)(usedRules[i][j].first*koeffX) + 3, startY + height - (int)(usedRules[i][j].second*koeffY) + 3);
+			memDC->LineTo(startX + (int)(usedRules[i][j + 1].first*koeffX), startY + height - (int)(usedRules[i][j + 1].second*koeffY));
 		}
 
 		memDC->SelectObject(oldPen);
 		memDC->SelectObject(oldBrush);
 	}
+
+	CPen* pen = new CPen();
+	pen->CreatePen(PS_SOLID, 3, RGB(0,0,0));
+	oldPen = memDC->SelectObject(pen);
+
+	for (int i = 0; i < initialData.size()-1; i++)
+	{
+		memDC->MoveTo(startX + (int)(initialData[i].first*koeffX), startY + height - (int)(initialData[i].second*koeffY));
+		memDC->LineTo(startX + (int)(initialData[i+1].first*koeffX), startY + height - (int)(initialData[i+1].second*koeffY));
+	}
+
+	memDC->SelectObject(oldPen);
+
+	CPen* redPen = new CPen();
+	redPen->CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
+	oldPen = memDC->SelectObject(redPen);
+
+	CFont* font = new CFont();
+	font->CreateFont(
+		12,                       
+		0,                         
+		0,                        
+		0,                         
+		FW_NORMAL,                 
+		FALSE,                     
+		FALSE,                     
+		0,                         
+		ANSI_CHARSET,              
+		OUT_DEFAULT_PRECIS,        
+		CLIP_DEFAULT_PRECIS,      
+		DEFAULT_QUALITY,           
+		DEFAULT_PITCH | FF_SWISS,  
+		_T("Arial"));  
+	CFont* oldFont = memDC->SelectObject(font);
+
+	std::ostringstream trunc;
+	trunc.setf(std::ios::fixed);
+	trunc.precision(3);
+
+	memDC->MoveTo(startX, startY + height);
+	memDC->LineTo(startX, -startY);
+	memDC->MoveTo(startX, startY + height);
+	memDC->LineTo(width - startX, startY + height);
+
+	for (int i = startX + (width - 2 * startX) / 15,j=1; i < width - startX; i += (width - 2 * startX) / 15,j++)
+	{
+		memDC->MoveTo(i, startY + height - 5);
+		memDC->LineTo(i, startY + height + 5);
+		CString str;
+		trunc.str("");
+		trunc << ((1.*j) / 15)*range*1.3;
+		str.Format(_T("%S"),trunc.str().c_str() );
+		memDC->TextOutW(i -14, startY + height + 10,str);
+	}
+
+	for (int i = startY + height - (height + 2 * startY) / 8,j = 1; i >-startY; i -= (height + 2 * startY) / 8,j++)
+	{
+		memDC->MoveTo(startX-5, i);
+		memDC->LineTo(startX+5, i);
+		CString str;
+		trunc.str("");
+		trunc << ((1.*j) / 8)*1.3;
+		str.Format(_T("%S"), trunc.str().c_str());
+		memDC->TextOutW(startX-25, i+5, str);
+	}
+}
+
+
+void CCoreProjectDlg::OnMove(int x, int y)
+{
+	CDialogEx::OnMove(x, y);
+	this->InvalidateRect(NULL);
+	// TODO: Add your message handler code here
+}
+
+
+void CCoreProjectDlg::OnBnClickedRemove()
+{
+	int currentRule = list3Ctrl.GetCurSel();
+	if (currentRule < 0)
+	{
+		MessageBox(_T("Please, select rule in the list in order to proceed"), _T("Error"),
+			MB_ICONERROR | MB_OK);
+	}
+	else
+	{
+		listCtrl.DeleteString(currentRule);
+		list3Ctrl.DeleteString(currentRule);
+		list4Ctrl.DeleteString(currentRule);
+
+		usedRules.erase(usedRules.begin()+currentRule);
+		engine->remove_rule(rulesId[currentRule]);
+		rulesId.erase(rulesId.begin() + currentRule);
+		itemColors.erase(itemColors.begin() + currentRule);
+		this->InvalidateRect(NULL);
+	}
+	// TODO: Add your control notification handler code here
 }
