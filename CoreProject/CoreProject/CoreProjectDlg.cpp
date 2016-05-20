@@ -132,11 +132,14 @@ BOOL CCoreProjectDlg::OnInitDialog()
 	}
 
 	RECT workArea, previousPosition;
+	workArea.left = 0;
+	workArea.top = 0;
+	workArea.right = GetSystemMetrics(SM_CXFULLSCREEN);
+	workArea.bottom = GetSystemMetrics(SM_CYFULLSCREEN);
 	this->GetWindowRect(&previousPosition);
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+	//SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
 	this->SetWindowPos(NULL, workArea.left, workArea.top, 1*workArea.right, 1*workArea.bottom, SWP_SHOWWINDOW |SWP_NOZORDER);
-	this->GetWindowRect(&workArea);
-
+	//this->GetWindowRect(&workArea);
 	RECT tempWindowPos;
 	CWnd* temp = this->GetDlgItem(IDOK);
 	temp->GetWindowRect(&tempWindowPos);
@@ -186,7 +189,7 @@ BOOL CCoreProjectDlg::OnInitDialog()
 		this->SetWindowTextW(_T("Boosted testing"));
 	}
 	// TODO: Add extra initialization here
-
+	ShowWindow(SW_MAXIMIZE);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -225,7 +228,11 @@ void CCoreProjectDlg::OnPaint()
 		RECT listBorders, windowBorders,workArea;
 		list->GetWindowRect(&listBorders);
 		this->GetWindowRect(&windowBorders);
-		SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+		//SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+		workArea.left = 0;
+		workArea.top = 0;
+		workArea.right = GetSystemMetrics(SM_CXFULLSCREEN);
+		workArea.bottom = GetSystemMetrics(SM_CYFULLSCREEN);
 		//this->MapWindowPoints(NULL, &windowBorders);
 
 		CDC* memDC = new CDC;
@@ -489,13 +496,13 @@ void CCoreProjectDlg::DrawGraphs(CDC* memDC,int width,int height)
 	memDC->MoveTo(startX, startY + height);
 	memDC->LineTo(width - startX, startY + height);
 
-	for (int i = startX + (width - 2 * startX) / 15,j=1; i < width - startX; i += (width - 2 * startX) / 15,j++)
+	for (int i = startX + (width - 2 * startX) / 15,j=1; i <= width - startX; i += (width - 2 * startX) / 15,j++)
 	{
 		memDC->MoveTo(i, startY + height - 5);
 		memDC->LineTo(i, startY + height + 5);
 		CString str;
 		trunc.str("");
-		trunc << ((1.*j) / 15)*range*1.3;
+		trunc << ((1.*j) / 15)*range;
 		str.Format(_T("%S"),trunc.str().c_str() );
 		memDC->TextOutW(i -14, startY + height + 10,str);
 	}
@@ -510,6 +517,30 @@ void CCoreProjectDlg::DrawGraphs(CDC* memDC,int width,int height)
 		str.Format(_T("%S"), trunc.str().c_str());
 		memDC->TextOutW(startX-25, i+5, str);
 	}
+	memDC->SelectObject(oldFont);
+
+	CFont* boldFont = new CFont();
+	boldFont->CreateFont(
+		18,
+		0,
+		0,
+		0,
+		FW_BOLD,
+		TRUE,
+		FALSE,
+		0,
+		ANSI_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		DEFAULT_PITCH | FF_SWISS,
+		_T("Arial"));
+	oldFont = memDC->SelectObject(boldFont);
+	CString str = _T("t"),str2=_T("P(t)");
+	memDC->TextOutW((width - startX)+10, height + startY-10, str);
+	memDC->TextOutW(startX-5,-startY-20, str2);
+	memDC->SelectObject(oldFont);
+
 }
 
 
