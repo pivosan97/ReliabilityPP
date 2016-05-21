@@ -247,7 +247,7 @@ void CCoreProjectDlg::OnPaint()
 		memDC->SelectObject(pob);
 		CImage final;
 		final.Attach((HBITMAP)(*pb));
-		final.StretchBlt((&dc)->m_hDC, GRAPH_START, listBorders.top - windowBorders.top-50, workArea.right - 60 - GRAPH_START, listBorders.bottom - listBorders.top, 0, 0, final.GetWidth(), final.GetHeight(), SRCCOPY);
+		final.StretchBlt((&dc)->m_hDC, GRAPH_START, listBorders.top - windowBorders.top-45, workArea.right - 60 - GRAPH_START, listBorders.bottom - listBorders.top, 0, 0, final.GetWidth(), final.GetHeight(), SRCCOPY);
 		if (IsIconic())
 		{
 			// device context for painting
@@ -328,35 +328,44 @@ void CCoreProjectDlg::OnChooseRule(UINT nID)
 			}
 			diagramData tempData;
 			double squareDev=0, relativeSquareDev=0, weightedSquareDev=0;
-			rulesId.push_back(engine->create_new_rule(tempData, squareDev
-				,relativeSquareDev,weightedSquareDev, ruleName, parameters));
-			usedRules.push_back(tempData);
-			CString result;
-			std::ostringstream temp3;
-			temp3.setf(std::ios::fixed);
-			temp3.precision(3);
-			for (int i = 0; i < parameters.size(); i++)
+			int result = engine->create_new_rule(tempData, squareDev
+				, relativeSquareDev, weightedSquareDev, ruleName, parameters);
+			if (!result)
 			{
-				CString temp1, temp2;
-				temp3.str("");
-				temp3<< parameters[i];
-				temp1.Format(_T("%S"), temp3.str().c_str());
-				temp2.Format(_T("%S"), paramNames[i].c_str());
-				result += temp2 + "=" + temp1 + _T(" ");
+				MessageBox(_T("Please, input valid parameters"), _T("Error"),
+					MB_ICONERROR | MB_OK);
 			}
-			temp3.str("");
-			temp3 << squareDev << "; " << relativeSquareDev << "; " << weightedSquareDev;
-			CString deviationString;
+			else
+			{
+				rulesId.push_back(result);
+				usedRules.push_back(tempData);
+				CString result;
+				std::ostringstream temp3;
+				temp3.setf(std::ios::fixed);
+				temp3.precision(3);
+				for (int i = 0; i < parameters.size(); i++)
+				{
+					CString temp1, temp2;
+					temp3.str("");
+					temp3 << parameters[i];
+					temp1.Format(_T("%S"), temp3.str().c_str());
+					temp2.Format(_T("%S"), paramNames[i].c_str());
+					result += temp2 + "=" + temp1 + _T(" ");
+				}
+				temp3.str("");
+				temp3 << squareDev << "; " << relativeSquareDev << "; " << weightedSquareDev;
+				CString deviationString;
 
-			deviationString.Format(_T("%S"), temp3.str().c_str());
-			listCtrl.AddString(menuItem);
-			list3Ctrl.AddString(result);
-			list4Ctrl.AddString(deviationString);
+				deviationString.Format(_T("%S"), temp3.str().c_str());
+				listCtrl.AddString(menuItem);
+				list3Ctrl.AddString(result);
+				list4Ctrl.AddString(deviationString);
 
-			itemColors.push_back(dial.currentColor);
-			RECT rect;
-			this->GetClientRect(&rect);
-			this->InvalidateRect(&rect);
+				itemColors.push_back(dial.currentColor);
+				RECT rect;
+				this->GetClientRect(&rect);
+				this->InvalidateRect(&rect);
+			}
 		}
 	}
 	
